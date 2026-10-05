@@ -1,1 +1,1 @@
-# System_Rezerwacji
+# System rezerwacji miejsc
