@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>System_rezerwacji_miejsc</RootNamespace>
+    <AssemblyName>System rezerwacji miejsc</AssemblyName>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <!--
+    Naprawa Issue #1 (https://github.com/kacperbocian-boop/System_Rezerwacji/issues/1):
+    SQLitePCLRaw.batteries_v2.dll nie był kopiowany do folderu kompilacji.
+    Rozwiązanie: jawny pakiet SQLitePCLRaw.bundle_e_sqlite3 + IncludeAssets=all na Microsoft.Data.Sqlite.
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.14">
+      <IncludeAssets>all</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.10" />
+  </ItemGroup>
+
+  <!-- Wszystkie pliki .cs w folderach Logika i db sa automatycznie kompilowane dzięki SDK-style project. -->
+
+</Project>
