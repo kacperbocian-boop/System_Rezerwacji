@@ -1,0 +1,181 @@
+@startuml DiagramKlas
+!theme plain
+title Diagram klas - System Rezerwacji Miejsc Kinowych
+
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+hide circle
+
+' ===== WARSTWA DANYCH (Programista C) =====
+package "System_rezerwacji_miejsc.db" {
+  class Film {
+    +Id : int
+    +Tytul : string
+    +Opis : string
+    +CzasTrwania : int
+    +ImageURL : string
+    +ToString() : string
+  }
+  class Seans {
+    +Id : int
+    +FilmId : int
+    +DataGodzina : string
+    +Sala : int
+    +ToString() : string
+  }
+  class Miejsce {
+    +Id : int
+    +Sala : int
+    +Rzad : int
+    +NumerMiejsca : int
+    +ToString() : string
+  }
+  class Database {
+    -connectionString : string
+    +UtworzBaze() : void
+    +PobierzPolaczenie() : SqliteConnection
+    -WypelnijDanymiPoczatkowymi() : void
+  }
+  class DatabaseReader {
+    -connectionString : string
+    +PobierzWszystkieFilmy() : List<Film>
+    +PobierzSeanseDlaFilmu(int) : List<Seans>
+    +PobierzObiektyMiejsc(int) : List<Miejsce>
+    +PobierzZarezerwowaneMiejsca(int) : List<int>
+    +PobierzObrazFilmu(int) : string
+  }
+  class DatabaseWriter {
+    -connectionString : string
+    +DodajFilm(string, string, int, string) : void
+    +DodajSeans(int, string, int) : void
+    +DodajMiejsce(int, int, int) : void
+    +DodajRezerwacje(int, int) : void
+    +UsunRezerwacje(int, int) : void
+    +UsunWszystkieRezerwacje(int) : void
+  }
+  class EksportImport {
+    -connectionString : string
+    +EksportujFilmyDoCsv(string) : void
+    +EksportujRezerwacjeDoCsv(string) : void
+    +EksportujWszystkoDoJson(string) : void
+    +ImportujFilmyZCsv(string) : int
+  }
+}
+
+' ===== WARSTWA LOGIKI (Programista B) =====
+package "System_rezerwacji_miejsc.Logika" {
+  class PozycjaKoszyka {
+    +Miejsce : Miejsce
+    +Seans : Seans
+    +Opis() : string
+    +Equals(object) : bool
+    +GetHashCode() : int
+  }
+  class Koszyk {
+    -pozycje : List<PozycjaKoszyka>
+    +Dodaj(Miejsce, Seans) : void
+    +Usun(Miejsce, Seans) : void
+    +Zawiera(Miejsce, Seans) : bool
+    +ZnajdzPoOpisie(string) : PozycjaKoszyka
+    +Wyczysc() : void
+    +Policz() : int
+    +PobierzWszystkie() : IReadOnlyList<PozycjaKoszyka>
+    +PobierzDlaSeansu(int) : IReadOnlyList<PozycjaKoszyka>
+  }
+  class Walidacja {
+    +SprawdzKoszyk(Koszyk, Seans) : string
+    +SprawdzFilm(string, int) : string
+    +SprawdzDateSeansu(string) : string
+    +SprawdzSale(int) : string
+  }
+  class RezerwacjaService {
+    -zapis : DatabaseWriter
+    +Zarezerwuj(Koszyk) : int
+    +AnulujRezerwacje(DatabaseReader, int, int) : bool
+    +AnulujWszystkieRezerwacje(DatabaseReader, int) : int
+  }
+  class StatystykaFilmu {
+    +Tytul : string
+    +LiczbaRezerwacji : int
+  }
+  class OblozenieSeansu {
+    +SeansId : int
+    +FilmTytul : string
+    +DataGodzina : string
+    +Sala : int
+    +LiczbaZajetych : int
+    +LiczbaWszystkich : int
+    +ProcentOblozenia : double
+  }
+  class WpisRezerwacji {
+    +RezerwacjaId : int
+    +FilmTytul : string
+    +DataGodzina : string
+    +Sala : int
+    +Rzad : int
+    +NumerMiejsca : int
+  }
+  class RaportyService {
+    -czytnik : DatabaseReader
+    +PobierzWszystkieRezerwacje() : List<WpisRezerwacji>
+    +PoliczRezerwacje() : int
+    +PoliczFilmy() : int
+    +PoliczSeanse() : int
+    +NajpopularniejszyFilm() : StatystykaFilmu
+    +OblozenieSeanse() : List<OblozenieSeansu>
+  }
+}
+
+' ===== WARSTWA UI (Programista A) =====
+package "System_rezerwacji_miejsc (UI)" {
+  class Form1 {
+    -baza : Database
+    -czytnik : DatabaseReader
+    -zapis : DatabaseWriter
+    -koszyk : Koszyk
+    -rezerwacjaService : RezerwacjaService
+    -walidacja : Walidacja
+    +Form1()
+    -WczytajFilmy() : void
+    -listaFilmow_SelectedIndexChanged() : void
+    -listaSeansow_SelectedIndexChanged() : void
+    -Miejsce_Click() : void
+    -btnUsunMiejsce_Click() : void
+    -btnWyczyscKoszyk_Click() : void
+    -btnZarezerwuj_Click() : void
+    -btnRaporty_Click() : void
+    -AktualizujWyswietlanieKoszyka() : void
+  }
+  class FormRaporty {
+    -raporty : RaportyService
+    +FormRaporty()
+    -WczytajRaporty() : void
+    -btnZamknij_Click() : void
+    -btnOdswiez_Click() : void
+  }
+}
+
+' ===== RELACJE =====
+Koszyk "1" *-- "many" PozycjaKoszyka : contains
+PozycjaKoszyka --> Miejsce
+PozycjaKoszyka --> Seans
+Seans --> Film : FilmId
+RezerwacjaService --> DatabaseWriter
+RezerwacjaService ..> Koszyk
+RezerwacjaService ..> DatabaseReader
+RaportyService --> DatabaseReader
+RaportyService ..> WpisRezerwacji
+RaportyService ..> OblozenieSeansu
+RaportyService ..> StatystykaFilmu
+Form1 --> Database
+Form1 --> DatabaseReader
+Form1 --> DatabaseWriter
+Form1 --> Koszyk
+Form1 --> RezerwacjaService
+Form1 --> Walidacja
+FormRaporty --> RaportyService
+Form1 ..> FormRaporty : opens
+EksportImport ..> DatabaseReader
+EksportImport ..> DatabaseWriter
+
+@enduml

@@ -1,0 +1,49 @@
+@startuml DiagramPrzypadkowUzycia
+!theme plain
+title Diagram przypadków użycia - System Rezerwacji Miejsc Kinowych
+
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+
+actor "Użytkownik" as U
+
+rectangle "System Rezerwacji Miejsc Kinowych" {
+  usecase "Wybór filmu\nz listy" as UC1
+  usecase "Wybór seansu\n(film + data)" as UC2
+  usecase "Podgląd siatki\nmiejsc na sali" as UC3
+  usecase "Dodawanie\nmiejsca do koszyka" as UC4
+  usecase "Usuwanie\nmiejsca z koszyka" as UC5
+  usecase "Czyszczenie\ncałego koszyka" as UC6
+  usecase "Zatwierdzenie\nrezerwacji" as UC7
+  usecase "Anulowanie\npojedynczej rezerwacji" as UC8
+  usecase "Anulowanie wszystkich\nrezerwacji na seans" as UC9
+  usecase "Przeglądanie\nraportów i statystyk" as UC10
+  usecase "Eksport danych\ndo CSV / JSON" as UC11
+  usecase "Import danych\nz CSV" as UC12
+  usecase "Walidacja\nkoszyka" as UC13
+  usecase "Zapis rezerwacji\nw bazie" as UC14
+}
+
+U --> UC1
+U --> UC2
+U --> UC3
+U --> UC4
+U --> UC5
+U --> UC6
+U --> UC7
+U --> UC10
+
+UC2 ..> UC1 : <<include>>
+UC3 ..> UC2 : <<include>>
+UC4 ..> UC3 : <<include>>
+UC5 ..> UC3 : <<include>>
+UC7 ..> UC13 : <<include>>
+UC7 ..> UC14 : <<include>>
+UC8 ..> UC14 : <<include>>
+UC9 ..> UC14 : <<include>>
+UC10 ..> UC14 : <<include>>
+UC11 ..> UC14 : <<include>>
+UC12 ..> UC14 : <<include>>
+
+@enduml
