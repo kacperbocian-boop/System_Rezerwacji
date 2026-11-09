@@ -4,12 +4,12 @@ Aplikacja desktopowa (C# / WinForms / .NET 10) do rezerwacji miejsc na seanse fi
 
 ## Zespół
 
-| Osoba            | Rola              | Zakres obowiązków                                                          |
-|------------------|-------------------|----------------------------------------------------------------------------|
-| Programista A    | UI / Frontend     | Tworzenie interfejsu użytkownika, obsługa formularzy, interakcja z aplikacją |
-| Programista B    | Logika biznesowa  | Obsługa koszyka, rezerwacje, anulowanie, walidacja danych                    |
-| Programista C    | Dane / Baza       | Operacje na bazie SQLite, import/eksport CSV / JSON                         |
-| Programista D    | QA / Dokumentacja | Testy jednostkowe, dokumentacja techniczna i użytkownika, raporty            |
+| Osoba                            | Rola              | Zakres obowiązków                                                                                |
+|------------------|-------------------|------------------------------------------------------------------------------------------------------------------|
+| Kacper Bocian (kacperbocian-boop)                    | UI / Frontend     | Tworzenie interfejsu użytkownika, obsługa formularzy, interakcja z aplikacją |
+| Tomasz Maciejewski (wladca777)                       | Logika biznesowa  | Obsługa koszyka, rezerwacje, anulowanie, walidacja danych                    |
+| Bartosz Bruniewski (PEB3332)                         | Dane / Baza       | Operacje na bazie SQLite, import/eksport CSV / JSON                          |
+| Filip Wiśniewski (filipwisniewski-cell)| QA / Dokumentacja | Testy jednostkowe, dokumentacja techniczna i użytkownika, raporty                          |
 
 ## Technologie
 
