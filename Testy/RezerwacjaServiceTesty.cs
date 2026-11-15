@@ -4,12 +4,11 @@ using Xunit;
 
 namespace Testy;
 
-// testy serwisu rezerwacji
-// integracja Koszyk + RezerwacjaService
 public class RezerwacjaServiceTesty
 {
+    // zabezpieczenie zeby apka sie nie wywalila jak nie ma koszyka
     [Fact]
-    public void Zarezerwuj_NullKoszyk_RzucaWyjatek()
+    public void Zarezerwuj_KiedyBrakKoszyka_PowinnoWyrzucicBlad()
     {
         var writer = new DatabaseWriter();
         var service = new RezerwacjaService(writer);
@@ -17,12 +16,13 @@ public class RezerwacjaServiceTesty
     }
 
     [Fact]
-    public void Zarezerwuj_PustyKoszyk_ZwracaZero()
+    public void Zarezerwuj_KiedyKoszykJestPusty_NieZapisujeNic()
     {
         var writer = new DatabaseWriter();
         var service = new RezerwacjaService(writer);
         var koszyk = new Koszyk();
-        int wynik = service.Zarezerwuj(koszyk);
-        Assert.Equal(0, wynik);
+        
+        int liczbaZapisanych = service.Zarezerwuj(koszyk);
+        Assert.Equal(0, liczbaZapisanych);
     }
 }
